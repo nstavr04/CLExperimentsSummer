@@ -1,6 +1,6 @@
 import tensorflow as tf
-from keras import layers
-from keras.regularizers import l2
+from tf.keras import layers
+from tf.keras.regularizers import l2
 import numpy as np
 import random
 import gc
