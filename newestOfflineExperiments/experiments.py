@@ -147,6 +147,9 @@ class Experiments:
             shuffle_in_unison([combined_x, combined_y], in_place=True)
 
             print("combined-x shape: {}, combined-y shape: {}".format(combined_x.shape, combined_y.shape))
+            
+            # Debug stuff
+            print("Expected input shape for head: ", cl_model.head.layers[0].input_shape)
 
             # Fit the head on the combined samples
             cl_model.head.fit(combined_x, combined_y, epochs=4, verbose=0)
