@@ -8,7 +8,7 @@ from matplotlib import pyplot as plt
 import json
 
 # DATASET_ROOT = 'C:/Users/nikol/Desktop/University/Year-4/ADE/ThesisCodeExperiments/CORe50-Dataset/core50_128x128/'
-# DATASET_ROOT = 'D:/MyFiles/ADE/SummerCodeContinuation/CORe50-Dataset/core50_128x128/'
+# DATASET_ROOT = 'D:/MyFiles/ADE/SummerCodeContinuation/CORe50-Dataset2/core50_128x128/'
 DATASET_ROOT = '/home/nstavr04/clofflineexperiments/CLExperimentsSummer/CORe50-Dataset/core50_128x128'
 
 class Experiments:

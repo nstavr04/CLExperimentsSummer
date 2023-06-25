@@ -29,8 +29,8 @@ if __name__ == '__main__':
         print("> Experiment: RBS_3000")
 
         experiments.runHiddenLayersExperiment(experiment_name="RBS_3000_HL_EXPERIMENTS",
-                                                    usecase="RBS_3000_HL0",
-                                                    replay_size=3000, num_hidden_layers=0)
+                                                    usecase="RBS_3000_HL5",
+                                                    replay_size=3000, num_hidden_layers=5)
         
         # experiments.runHiddenLayersExperiment(experiment_name="RBS_3000_HL_EXPERIMENTS",
         #                                             usecase="RBS_3000_HL1",
@@ -52,8 +52,8 @@ if __name__ == '__main__':
         #                                             usecase="RBS_3000_HL5",
         #                                             replay_size=3000, num_hidden_layers=5)
 
-        experiments.plotExperiment(experiment_name="RBS_3000_HL_EXPERIMENTS",
-                                   title="RBS_3000_HL_EXPERIMENTS (CORe50 NICv2 - 391)")
+        # experiments.plotExperiment(experiment_name="RBS_3000_HL_EXPERIMENTS",
+        #                            title="RBS_3000_HL_EXPERIMENTS (CORe50 NICv2 - 391)")
         
     elif args.exp_RBS_5000:
         print("> Experiment: RBS_5000")
