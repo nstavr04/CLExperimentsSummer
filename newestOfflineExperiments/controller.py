@@ -3,6 +3,10 @@ import argparse
 import numpy as np
 import tensorflow as tf
 
+gpus = tf.config.experimental.list_physical_devices('GPU')
+for gpu in gpus:
+    tf.config.experimental.set_memory_growth(gpu, True)
+
 # Set seeds for reproducibility
 # https://keras.io/getting_started/faq/#how-can-i-obtain-reproducible-results-using-keras-during-development
 # Due to the fact that we are running the experiments on GPU, there is some non-determinism involved.
