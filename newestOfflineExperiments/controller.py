@@ -32,9 +32,9 @@ if __name__ == '__main__':
     if args.exp_RBS_3000:
         print("> Experiment: RBS_3000")
 
-        experiments.runHiddenLayersExperiment(experiment_name="RBS_3000_HL_EXPERIMENTS",
-                                                    usecase="RBS_3000_HL0",
-                                                    replay_size=3000, num_hidden_layers=0)
+        # experiments.runHiddenLayersExperiment(experiment_name="RBS_3000_HL_EXPERIMENTS",
+        #                                             usecase="RBS_3000_HL0",
+        #                                             replay_size=3000, num_hidden_layers=0)
         
         # experiments.runHiddenLayersExperiment(experiment_name="RBS_3000_HL_EXPERIMENTS",
         #                                             usecase="RBS_3000_HL1",
@@ -44,9 +44,9 @@ if __name__ == '__main__':
         #                                             usecase="RBS_3000_HL2",
         #                                             replay_size=3000, num_hidden_layers=2)
         
-        experiments.runHiddenLayersExperiment(experiment_name="RBS_3000_HL_EXPERIMENTS",
-                                                    usecase="RBS_3000_HL3",
-                                                    replay_size=3000, num_hidden_layers=3)
+        # experiments.runHiddenLayersExperiment(experiment_name="RBS_3000_HL_EXPERIMENTS",
+        #                                             usecase="RBS_3000_HL3",
+        #                                             replay_size=3000, num_hidden_layers=3)
         
         # experiments.runHiddenLayersExperiment(experiment_name="RBS_3000_HL_EXPERIMENTS",
         #                                             usecase="RBS_3000_HL4",
