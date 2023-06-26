@@ -29,8 +29,8 @@ if __name__ == '__main__':
         print("> Experiment: RBS_3000")
 
         experiments.runHiddenLayersExperiment(experiment_name="RBS_3000_HL_EXPERIMENTS",
-                                                    usecase="RBS_3000_HL1",
-                                                    replay_size=3000, num_hidden_layers=1)
+                                                    usecase="RBS_3000_HL0",
+                                                    replay_size=3000, num_hidden_layers=0)
         
         # experiments.runHiddenLayersExperiment(experiment_name="RBS_3000_HL_EXPERIMENTS",
         #                                             usecase="RBS_3000_HL1",
