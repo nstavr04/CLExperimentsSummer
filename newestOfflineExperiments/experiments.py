@@ -2,7 +2,7 @@ from models import ContinualLearningModel
 from data_loader import CORE50
 from utils import *
 import os
-os.environ['TF_GPU_ALLOCATOR'] = 'cuda_malloc_async'
+# os.environ['TF_GPU_ALLOCATOR'] = 'cuda_malloc_async'
 import tensorflow as tf
 from matplotlib import pyplot as plt
 import json
