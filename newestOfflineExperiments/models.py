@@ -37,7 +37,7 @@ class ContinualLearningModel:
         f = inputs
         f_out = self.base(f)
         self.feature_extractor = tf.keras.Model(f, f_out)
-        self.feature_extractor.compile(optimizer=tf.keras.optimizers.SGD(learning_rate=0.001), loss='categorical_crossentropy',
+        self.feature_extractor.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.001), loss='categorical_crossentropy',
                                        metrics=['accuracy'])
 
     # Head of our model. We add N layers to the end of MobileNetV2 + a dense layer + softmax layer
@@ -78,7 +78,7 @@ class ContinualLearningModel:
 
         # It's worth noting that the compiling of the head and the model here is probably redundant
         # since we compile the head and model again on the experiments function with a different learning rate
-        self.head.compile(optimizer=tf.keras.optimizers.SGD(learning_rate=0.001), loss='sparse_categorical_crossentropy',
+        self.head.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.001), loss='sparse_categorical_crossentropy',
                           metrics=['accuracy'])    
 
     def buildCompleteModel(self):
@@ -87,7 +87,7 @@ class ContinualLearningModel:
         x = self.base(x)
         outputs = self.head(x)
         self.model = tf.keras.Model(inputs, outputs)
-        self.model.compile(optimizer=tf.keras.optimizers.SGD(learning_rate=0.001), loss='sparse_categorical_crossentropy',
+        self.model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.001), loss='sparse_categorical_crossentropy',
                            metrics=['accuracy'])
 
     # Refreshing replay memory with new samples and removing old ones if necessary

@@ -114,9 +114,9 @@ class Experiments:
                 # A higher learning rate on the head such as 0.001 works way better especially with the latent replay buffer
                 # Increasing the learning rate even more to e.g. 0.01 makes the model unstable since on some batches we have huge loss
                 # but the overall accuracy remains more or less the same
-                cl_model.model.compile(optimizer=tf.keras.optimizers.SGD(learning_rate=0.00005),
+                cl_model.model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.00005),
                                        loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-                cl_model.head.compile(optimizer=tf.keras.optimizers.SGD(learning_rate=0.001),
+                cl_model.head.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),
                                       loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
             # Padding of the first batch. Unsure about this
