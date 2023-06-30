@@ -116,7 +116,7 @@ class Experiments:
                 # but the overall accuracy remains more or less the same
                 cl_model.model.compile(optimizer=tf.keras.optimizers.SGD(learning_rate=0.00005),
                                        loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-                cl_model.head.compile(optimizer=tf.keras.optimizers.Adagrad(learning_rate=0.001),
+                cl_model.head.compile(optimizer=tf.keras.optimizers.SGD(learning_rate=0.001),
                                       loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
             # Padding of the first batch. Unsure about this
