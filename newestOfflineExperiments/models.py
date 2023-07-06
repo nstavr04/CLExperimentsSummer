@@ -4,6 +4,8 @@ from tensorflow.keras.regularizers import l2
 import numpy as np
 import random
 import gc
+from collections import Counter
+
 
 class ContinualLearningModel:
 
@@ -186,6 +188,14 @@ class ContinualLearningModel:
         # Essential to call gc otherwise we get out of memory errors
         gc.collect()
         print("Replay X: ",len(self.replay_representations_x)," Replay Y: ",len(self.replay_representations_y))
+
+        # Print the number of samples of each class in the replay buffer
+        print("Replay Buffer Class Distribution: ",Counter(self.replay_representations_y))
+
+    # Balanced Reservoir Sampling
+    # A random sample from the most represented class is discarded when the Memory Buffer is full
+    # https://arxiv.org/abs/2010.05595
+    #def BRS(self, train_x, train_y, batch_num):
 
     # Reduntant function since we mix the replay samples with the new samples and train them together in experiments function
     def replay(self):

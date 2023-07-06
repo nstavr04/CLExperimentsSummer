@@ -166,6 +166,11 @@ class Experiments:
             # Store the representations of the new samples in the replay buffer
             cl_model.storeRepresentationsNativeRehearsal(train_x, train_y, i+1)
 
+            #cl_model.BRS(train_x, train_y, i+1)
+
+            # Kind of tricky to obtain each training loss, we can't with fit so we need to loop each sample. Will leave it for now
+            # cl_model.LARS(train_x, train_y, i+1, passthelosshere)
+
             # Evaluate the model on the test set
             loss, acc = cl_model.model.evaluate(test_x, test_y)
             accuracies.append(round(acc*100,1))
