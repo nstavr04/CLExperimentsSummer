@@ -190,7 +190,9 @@ class ContinualLearningModel:
         print("Replay X: ",len(self.replay_representations_x)," Replay Y: ",len(self.replay_representations_y))
 
         # Print the number of samples of each class in the replay buffer
-        print("Replay Buffer Class Distribution: ",Counter(self.replay_representations_y))
+        counter_dict = Counter(self.replay_representations_y)
+        sorted_counter_dict = {k: counter_dict[k] for k in sorted(counter_dict)}
+        print("Replay Buffer Class Distribution: ", sorted_counter_dict)
 
     # Balanced Reservoir Sampling
     # A random sample from the most represented class is discarded when the Memory Buffer is full
