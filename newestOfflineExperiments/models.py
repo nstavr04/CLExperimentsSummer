@@ -197,16 +197,16 @@ class ContinualLearningModel:
     # Balanced Reservoir Sampling
     # A random sample from the most represented class is discarded when the Memory Buffer is full
     # https://arxiv.org/abs/2010.05595
-    def BRS(self, train_x, train_y, batch_num):
+    def BRS(self, features, train_x, train_y, batch_num):
+
+        # features is train_x passed through the feature extractor
 
         # We take 1 sample at a time
         for i in range(len(train_x)):
-            
-            x_sample = self.feature_extractor.predict(np.array([train_x[i]]))
 
             # If replay buffer is not full we just add the new sample
             if self.replay_buffer > len(self.replay_representations_x):
-                self.replay_representations_x.append(x_sample)
+                self.replay_representations_x.append(features[i])
                 self.replay_representations_y.append(train_y[i])
 
             else:
@@ -219,7 +219,7 @@ class ContinualLearningModel:
                 indices = [i for i, y in enumerate(self.replay_representations_y) if y == most_represented_class]
                 k = random.choice(indices)
 
-                self.replay_representations_x[k] = x_sample
+                self.replay_representations_x[k] = features[i]
                 self.replay_representations_y[k] = train_y[i] 
         
         gc.collect()
