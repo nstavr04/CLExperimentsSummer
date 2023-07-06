@@ -197,7 +197,38 @@ class ContinualLearningModel:
     # Balanced Reservoir Sampling
     # A random sample from the most represented class is discarded when the Memory Buffer is full
     # https://arxiv.org/abs/2010.05595
-    #def BRS(self, train_x, train_y, batch_num):
+    def BRS(self, train_x, train_y, batch_num):
+
+        # We take 1 sample at a time
+        for i in range(len(train_x)):
+            
+            x_sample = self.feature_extractor.predict(np.array([train_x[i]]))
+
+            # If replay buffer is not full we just add the new sample
+            if self.replay_buffer > len(self.replay_representations_x):
+                self.replay_representations_x.append(x_sample)
+                self.replay_representations_y.append(train_y[i])
+
+            else:
+
+                # Find the class that is most represented in the buffer
+                class_counts = np.bincount(self.replay_representations_y)
+                most_represented_class = np.argmax(class_counts)
+
+                # Select a random example of the most represented class
+                indices = [i for i, y in enumerate(self.replay_representations_y) if y == most_represented_class]
+                k = random.choice(indices)
+
+                self.replay_representations_x[k] = x_sample
+                self.replay_representations_y[k] = train_y[i] 
+        
+        gc.collect()
+        print("Replay X: ",len(self.replay_representations_x)," Replay Y: ",len(self.replay_representations_y))
+
+        # Print the number of samples of each class in the replay buffer
+        counter_dict = Counter(self.replay_representations_y)
+        sorted_counter_dict = {k: counter_dict[k] for k in sorted(counter_dict)}
+        print("Replay Buffer Class Distribution: ", sorted_counter_dict)
 
     # Reduntant function since we mix the replay samples with the new samples and train them together in experiments function
     def replay(self):
