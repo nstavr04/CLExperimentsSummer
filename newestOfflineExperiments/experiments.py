@@ -6,6 +6,7 @@ import os
 import tensorflow as tf
 from matplotlib import pyplot as plt
 import json
+from collections import Counter
 
 # DATASET_ROOT = 'C:/Users/nikol/Desktop/University/Year-4/ADE/ThesisCodeExperiments/CORe50-Dataset/core50_128x128/'
 # DATASET_ROOT = 'D:/MyFiles/ADE/SummerCodeContinuation/CORe50-Dataset2/core50_128x128/'
@@ -70,6 +71,13 @@ class Experiments:
         dataset = CORE50(root=DATASET_ROOT, scenario="nicv2_391", preload=False)
         test_x, test_y = dataset.get_test_set()
         test_x = preprocess(test_x)
+
+        # Print the number of samples of each class in the replay buffer
+        counter_dict = Counter(test_y)
+        sorted_counter_dict = {k: counter_dict[k] for k in sorted(counter_dict)}
+        print("Replay Buffer Class Distribution: ", sorted_counter_dict)
+
+        exit()
 
         # Building main model
         cl_model = ContinualLearningModel(image_size=128, name=usecase,replay_buffer=replay_size)
