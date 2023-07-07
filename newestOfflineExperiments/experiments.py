@@ -77,8 +77,6 @@ class Experiments:
         sorted_counter_dict = {k: counter_dict[k] for k in sorted(counter_dict)}
         print("Test_Set_Class_Distribution: ", sorted_counter_dict)
 
-        exit()
-
         # Building main model
         cl_model = ContinualLearningModel(image_size=128, name=usecase,replay_buffer=replay_size)
         cl_model.buildBaseHidden(hidden_layers=num_hidden_layers)
