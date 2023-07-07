@@ -72,10 +72,10 @@ class Experiments:
         test_x, test_y = dataset.get_test_set()
         test_x = preprocess(test_x)
 
-        # Print the number of samples of each class in the replay buffer
+        # Just a print of the test set to know the distribution of classes
         counter_dict = Counter(test_y)
         sorted_counter_dict = {k: counter_dict[k] for k in sorted(counter_dict)}
-        print("Replay Buffer Class Distribution: ", sorted_counter_dict)
+        print("Test_Set_Class_Distribution: ", sorted_counter_dict)
 
         exit()
 
