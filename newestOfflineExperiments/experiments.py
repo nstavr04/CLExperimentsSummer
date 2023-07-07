@@ -7,6 +7,7 @@ import tensorflow as tf
 from matplotlib import pyplot as plt
 import json
 from collections import Counter
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 # DATASET_ROOT = 'C:/Users/nikol/Desktop/University/Year-4/ADE/ThesisCodeExperiments/CORe50-Dataset/core50_128x128/'
 # DATASET_ROOT = 'D:/MyFiles/ADE/SummerCodeContinuation/CORe50-Dataset2/core50_128x128/'
@@ -133,6 +134,14 @@ class Experiments:
 
             print("---------------------------------")
 
+            # This would be how to augment data and last parameter is how many to produce
+            # The augmentation is random meaning we don't know which train_x samples will be used everytime to generate new samples
+            # We should look into how to achieve class balancing in the augmentation
+            # Also, after augmenting we need to do feature extraction.
+            # This means in the replay buffer we cant augment if we save the features of the samples
+            # The augmentation needs to happen on the original images
+            # augmented_train_x, augmented_train_y = augment_data(train_x, train_y, 100)
+
             features = cl_model.feature_extractor.predict(train_x)
 
             # Combining the new samples and the replay buffer samples before training
@@ -189,3 +198,24 @@ class Experiments:
                                    usecase_name=usecase,
                                    accuracies=accuracies,
                                    losses=losses)
+
+    # Function to augment data used for both the training and replay samples    
+    def augment_data(data_x, data_y, batch_size):
+        # Initialize the data generator
+        # Need to experiment on the values
+        datagen = ImageDataGenerator(
+            rotation_range=15,
+            width_shift_range=0.1,
+            height_shift_range=0.1,
+            shear_range=0.1,
+            zoom_range=0.1,
+            horizontal_flip=True,
+            fill_mode='nearest')
+        
+        # Generate augmented data
+        data_gen = datagen.flow(data_x, data_y, batch_size=batch_size)
+        
+        # Get a batch of augmented data
+        augmented_data_x, augmented_data_y = next(data_gen)
+        
+        return augmented_data_x, augmented_data_y
