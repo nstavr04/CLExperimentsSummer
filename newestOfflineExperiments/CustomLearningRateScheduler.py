@@ -13,7 +13,7 @@ class CustomLearningRateScheduler(tf.keras.optimizers.schedules.LearningRateSche
 
     # Step gives current batch. Can do * 300 to get total samples so far since we see 300 everytime besides epoch 1
     def __call__(self, step):
-        return self.initial_learning_rate * (self.gamma ** (step))
+        return self.initial_learning_rate * (self.gamma ** (step * 300))
 
 # Can use these
 
