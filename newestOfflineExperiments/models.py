@@ -6,6 +6,8 @@ import random
 import gc
 from collections import Counter
 
+from CustomLearningRateScheduler import CustomLearningRateScheduler
+
 
 class ContinualLearningModel:
 
@@ -17,6 +19,9 @@ class ContinualLearningModel:
         self.replay_representations_x = []
         self.replay_representations_y = []
         self.replay_buffer = replay_buffer # The number of patterns stored
+
+        self.lr_schedule = CustomLearningRateScheduler(initial_learning_rate=0.001, gamma=0.9999846859337639)
+        self.optimizer = tf.keras.optimizers.SGD(learning_rate=self.lr_schedule)
 
     # Base of our model. We remove the last N layers of MobileNetV2    
     def buildBaseHidden(self,hidden_layers=0):
@@ -39,7 +44,7 @@ class ContinualLearningModel:
         f = inputs
         f_out = self.base(f)
         self.feature_extractor = tf.keras.Model(f, f_out)
-        self.feature_extractor.compile(optimizer=tf.keras.optimizers.SGD(learning_rate=0.001), loss='categorical_crossentropy',
+        self.feature_extractor.compile(optimizer=self.optimizer, loss='categorical_crossentropy',
                                        metrics=['accuracy'])
 
     # Head of our model. We add N layers to the end of MobileNetV2 + a dense layer + softmax layer
@@ -80,7 +85,7 @@ class ContinualLearningModel:
 
         # It's worth noting that the compiling of the head and the model here is probably redundant
         # since we compile the head and model again on the experiments function with a different learning rate
-        self.head.compile(optimizer=tf.keras.optimizers.SGD(learning_rate=0.001), loss='sparse_categorical_crossentropy',
+        self.head.compile(optimizer=self.optimizer, loss='sparse_categorical_crossentropy',
                           metrics=['accuracy'])    
 
     def buildCompleteModel(self):
@@ -89,7 +94,7 @@ class ContinualLearningModel:
         x = self.base(x)
         outputs = self.head(x)
         self.model = tf.keras.Model(inputs, outputs)
-        self.model.compile(optimizer=tf.keras.optimizers.SGD(learning_rate=0.001), loss='sparse_categorical_crossentropy',
+        self.model.compile(optimizer=self.optimizer, loss='sparse_categorical_crossentropy',
                            metrics=['accuracy'])
 
     # Refreshing replay memory with new samples and removing old ones if necessary
@@ -231,11 +236,11 @@ class ContinualLearningModel:
         print("Replay Buffer Class Distribution: ", sorted_counter_dict)
 
     # Reduntant function since we mix the replay samples with the new samples and train them together in experiments function
-    def replay(self):
+    # def replay(self):
 
-        replay_x = np.array(self.replay_representations_x)
-        replay_y = np.array(self.replay_representations_y)
+    #     replay_x = np.array(self.replay_representations_x)
+    #     replay_y = np.array(self.replay_representations_y)
 
-        print("> REPLAYING")
-        # Fitting for just 1 epoch
-        self.head.fit(replay_x,replay_y,epochs=1,verbose=0) 
+    #     print("> REPLAYING")
+    #     # Fitting for just 1 epoch
+    #     self.head.fit(replay_x,replay_y,epochs=1,verbose=0) 

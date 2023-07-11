@@ -53,15 +53,7 @@ if __name__ == '__main__':
         #                                             replay_size=3000, num_hidden_layers=4)
         
         experiments.runHiddenLayersExperiment(experiment_name="RBS_3000_HL_EXPERIMENTS",    
-                                                    usecase="RBS_3000_HL5_1",
-                                                    replay_size=3000, num_hidden_layers=5)
-        
-        experiments.runHiddenLayersExperiment(experiment_name="RBS_3000_HL_EXPERIMENTS",    
-                                                    usecase="RBS_3000_HL5_2",
-                                                    replay_size=3000, num_hidden_layers=5)
-        
-        experiments.runHiddenLayersExperiment(experiment_name="RBS_3000_HL_EXPERIMENTS",    
-                                                    usecase="RBS_3000_HL5_3",
+                                                    usecase="RBS_3000_HL5",
                                                     replay_size=3000, num_hidden_layers=5)
 
         experiments.plotExperiment(experiment_name="RBS_3000_HL_EXPERIMENTS",

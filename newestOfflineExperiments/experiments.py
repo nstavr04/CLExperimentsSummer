@@ -1,5 +1,6 @@
 from models import ContinualLearningModel
 from data_loader import CORE50
+from CustomLearningRateScheduler import CustomLearningRateScheduler
 from utils import *
 import os
 # os.environ['TF_GPU_ALLOCATOR'] = 'cuda_malloc_async'
@@ -104,6 +105,10 @@ class Experiments:
 
         #### End of debugging ####
 
+        # Used for exponential learning decay
+        lr_schedule = CustomLearningRateScheduler(initial_learning_rate=0.001, gamma=0.9999846859337639)
+        optimizer = tf.keras.optimizers.SGD(learning_rate=lr_schedule)
+
         accuracies = []
         losses = []
 
@@ -116,6 +121,9 @@ class Experiments:
             print("train_x shape: {}, train_y shape: {}"
                   .format(train_x.shape, train_y.shape))
 
+            current_lr = lr_schedule(i).numpy()
+            print("Current learning rate: ", current_lr)
+
             if i == 1:
                 # Previous values on both: 0.00005
                 # A higher learning rate on the head such as 0.001 works way better especially with the latent replay buffer
@@ -123,7 +131,7 @@ class Experiments:
                 # but the overall accuracy remains more or less the same
                 cl_model.model.compile(optimizer=tf.keras.optimizers.SGD(learning_rate=0.00005),
                                        loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-                cl_model.head.compile(optimizer=tf.keras.optimizers.SGD(learning_rate=0.001),
+                cl_model.head.compile(optimizer=optimizer,
                                       loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
             # Padding of the first batch. Unsure about this
@@ -179,9 +187,9 @@ class Experiments:
             #### End of the above ####
 
             # Store the representations of the new samples in the replay buffer
-            cl_model.storeRepresentationsNativeRehearsal(train_x, train_y, i+1)
+            # cl_model.storeRepresentationsNativeRehearsal(train_x, train_y, i+1)
 
-            # cl_model.BRS(features, train_x, train_y, i+1)
+            cl_model.BRS(features, train_x, train_y, i+1)
 
             # Kind of tricky to obtain each training loss, we can't with fit so we need to loop each sample. Will leave it for now
             # cl_model.LARS(train_x, train_y, i+1, passthelosshere)
