@@ -121,7 +121,7 @@ class Experiments:
             print("train_x shape: {}, train_y shape: {}"
                   .format(train_x.shape, train_y.shape))
 
-            current_lr = lr_schedule(i).numpy()
+            current_lr = lr_schedule(i)
             print("Current learning rate: ", current_lr)
 
             if i == 1:
