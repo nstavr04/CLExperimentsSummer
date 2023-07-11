@@ -106,7 +106,7 @@ class Experiments:
         #### End of debugging ####
 
         # Used for exponential learning decay
-        lr_schedule = CustomLearningRateScheduler(initial_learning_rate=0.001, gamma=0.9999846859337639)
+        lr_schedule = CustomLearningRateScheduler(initial_learning_rate=0.006, gamma=0.9999846859337639)
         optimizer = tf.keras.optimizers.SGD(learning_rate=lr_schedule)
 
         accuracies = []
