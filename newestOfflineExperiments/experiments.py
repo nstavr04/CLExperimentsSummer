@@ -106,8 +106,10 @@ class Experiments:
         #### End of debugging ####
 
         # Used for exponential learning decay
-        lr_schedule = CustomLearningRateScheduler(initial_learning_rate=0.004, gamma=0.9999846859337639)
-        optimizer = tf.keras.optimizers.SGD(learning_rate=lr_schedule)
+        # lr_schedule = CustomLearningRateScheduler(initial_learning_rate=0.004, gamma=0.9999846859337639)
+        # optimizer = tf.keras.optimizers.SGD(learning_rate=lr_schedule)
+
+        optimizer = tf.keras.optimizers.SGD(learning_rate=0.001)
 
         accuracies = []
         losses = []
@@ -121,8 +123,8 @@ class Experiments:
             print("train_x shape: {}, train_y shape: {}"
                   .format(train_x.shape, train_y.shape))
 
-            current_lr = lr_schedule(i)
-            print("Current learning rate: ", current_lr)
+            # current_lr = lr_schedule(i)
+            # print("Current learning rate: ", current_lr)
 
             if i == 1:
                 # Previous values on both: 0.00005
@@ -189,10 +191,16 @@ class Experiments:
             # Store the representations of the new samples in the replay buffer
             # cl_model.storeRepresentationsNativeRehearsal(train_x, train_y, i+1)
 
-            cl_model.BRS(features, train_x, train_y, i+1)
+            # cl_model.BRS(features, train_x, train_y)
+
+            # Used only for LARS to obtain the losses of the training samples
+            losses_LARS = []
+            for x, y in zip(train_x, train_y):
+                _, loss = cl_model.head.evaluate(x=np.expand_dims(x, axis=0), y=np.expand_dims(y, axis=0), verbose=0)
+                losses_LARS.append(loss)
 
             # Kind of tricky to obtain each training loss, we can't with fit so we need to loop each sample. Will leave it for now
-            # cl_model.LARS(train_x, train_y, i+1, passthelosshere)
+            cl_model.LARS(features, train_x, train_y, losses_LARS)
 
             # Evaluate the model on the test set
             loss, acc = cl_model.model.evaluate(test_x, test_y)

@@ -18,10 +18,14 @@ class ContinualLearningModel:
         self.name = name
         self.replay_representations_x = []
         self.replay_representations_y = []
+        # Only used for LARS
+        self.replay_representations_losses = []
         self.replay_buffer = replay_buffer # The number of patterns stored
 
-        self.lr_schedule = CustomLearningRateScheduler(initial_learning_rate=0.004, gamma=0.9999846859337639)
-        self.optimizer = tf.keras.optimizers.SGD(learning_rate=self.lr_schedule)
+        # self.lr_schedule = CustomLearningRateScheduler(initial_learning_rate=0.004, gamma=0.9999846859337639)
+        # self.optimizer = tf.keras.optimizers.SGD(learning_rate=self.lr_schedule)
+
+        self.optimizer = tf.keras.optimizers.SGD(learning_rate=0.001)
 
     # Base of our model. We remove the last N layers of MobileNetV2    
     def buildBaseHidden(self,hidden_layers=0):
@@ -202,7 +206,7 @@ class ContinualLearningModel:
     # Balanced Reservoir Sampling
     # A random sample from the most represented class is discarded when the Memory Buffer is full
     # https://arxiv.org/abs/2010.05595
-    def BRS(self, features, train_x, train_y, batch_num):
+    def BRS(self, features, train_x, train_y):
 
         # features is train_x passed through the feature extractor
 
@@ -232,6 +236,57 @@ class ContinualLearningModel:
 
         # Print the number of samples of each class in the replay buffer
         counter_dict = Counter(self.replay_representations_y)
+        sorted_counter_dict = {k: counter_dict[k] for k in sorted(counter_dict)}
+        print("Replay Buffer Class Distribution: ", sorted_counter_dict)
+
+    # Loss-Aware Balanced Reservoir Sampling
+    def LARS(self, features, train_x, train_y, losses):
+
+        # Take 1 sample at a time
+        for i in range(len(train_x)):
+
+            # We also store the corresponding loss value
+            sample = (features[i], train_y[i], losses[i])
+
+            if self.replay_buffer > len(self.replay_representations_x):
+
+                # Just add the new sample if replay buffer is not full
+                self.replay_representations_x.append(features[i])
+                self.replay_representations_y.append(train_y[i])
+                self.replay_representations_losses.append(losses[i])
+
+            else:
+
+                # If replay buffer is full, we decide which sample to replace based on their scores
+
+                # Compute Sbalance
+                class_counts = np.bincount([y for _, y, _ in self.replay_representations_y])
+                Sbalance = class_counts / len(self.replay_buffer)
+
+                # Compute Sloss
+                Sloss = -np.array([l for _, _, l in self.replay_representations_losses])
+                Sloss /= np.sum(Sloss)
+
+                # Combine Sbalance and Sloss to get the final scores
+                a = np.sum(np.abs(Sbalance)) / np.sum(np.abs(Sloss)))
+                S = Sloss * a + Sbalance
+
+                # Compute replacement probabilities
+                probs = S / np.sum(S)
+
+                # Choose a sample to replace
+                k = np.random.choice(len(self.replay_buffer), p=probs)
+
+                # Replace the chosen sample with the new sample
+                self.replay_representations_x[k] = features[i]
+                self.replay_representations_y[k] = train_y[i]
+                self.replay_representations_losses[k] = losses[i]
+
+        gc.collect()
+        print("Replay samples: ", len(self.replay_samples))
+
+        # Print the number of samples of each class in the replay buffer
+        counter_dict = Counter([y for _, y, _ in self.replay_samples])
         sorted_counter_dict = {k: counter_dict[k] for k in sorted(counter_dict)}
         print("Replay Buffer Class Distribution: ", sorted_counter_dict)
 
