@@ -195,7 +195,7 @@ class Experiments:
 
             # Used only for LARS to obtain the losses of the training samples
             losses_LARS = []
-            for x, y in zip(train_x, train_y):
+            for x, y in zip(features, train_y):
                 _, loss = cl_model.head.evaluate(x=np.expand_dims(x, axis=0), y=np.expand_dims(y, axis=0), verbose=0)
                 losses_LARS.append(loss)
 
