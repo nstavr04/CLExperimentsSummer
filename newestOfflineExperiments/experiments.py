@@ -207,7 +207,9 @@ class Experiments:
                                    accuracies=accuracies,
                                    losses=losses)
 
-    # Function to augment data used for both the training and replay samples    
+    # Function to augment data used for both the training and replay samples
+    # Issue with augment is that we cannot store features on buffer if we will augument the data after because the augmentation
+    # needs to happen on the original image. This means we need to save the original images on the buffer and not the features    
     def augment_data(data_x, data_y, batch_size):
         # Initialize the data generator
         # Need to experiment on the values
