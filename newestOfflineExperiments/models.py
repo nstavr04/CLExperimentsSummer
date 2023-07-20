@@ -268,7 +268,7 @@ class ContinualLearningModel:
                 Sloss /= np.sum(Sloss)
 
                 # Combine Sbalance and Sloss to get the final scores
-                a = np.sum(np.abs(Sbalance)) / np.sum(np.abs(Sloss)))
+                a = np.sum(np.abs(Sbalance)) / np.sum(np.abs(Sloss))
                 S = Sloss * a + Sbalance
 
                 # Compute replacement probabilities
