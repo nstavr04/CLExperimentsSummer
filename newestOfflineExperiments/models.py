@@ -261,7 +261,7 @@ class ContinualLearningModel:
 
                 # Compute Sbalance
                 class_counts = np.bincount(self.replay_representations_y)
-                Sbalance = class_counts / len(self.replay_buffer)
+                Sbalance = class_counts / len(self.replay_representations_x)
 
                 # Compute Sloss
                 Sloss = -np.array(self.replay_representations_losses)
