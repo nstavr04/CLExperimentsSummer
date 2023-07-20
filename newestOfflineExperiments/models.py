@@ -260,11 +260,11 @@ class ContinualLearningModel:
                 # If replay buffer is full, we decide which sample to replace based on their scores
 
                 # Compute Sbalance
-                class_counts = np.bincount([y for _, y, _ in self.replay_representations_y])
+                class_counts = np.bincount(self.replay_representations_y)
                 Sbalance = class_counts / len(self.replay_buffer)
 
                 # Compute Sloss
-                Sloss = -np.array([l for _, _, l in self.replay_representations_losses])
+                Sloss = -np.array(self.replay_representations_losses)
                 Sloss /= np.sum(Sloss)
 
                 # Combine Sbalance and Sloss to get the final scores
@@ -286,7 +286,7 @@ class ContinualLearningModel:
         print("Replay samples: ", len(self.replay_samples))
 
         # Print the number of samples of each class in the replay buffer
-        counter_dict = Counter([y for _, y, _ in self.replay_samples])
+        counter_dict = Counter(self.replay_representations_y)
         sorted_counter_dict = {k: counter_dict[k] for k in sorted(counter_dict)}
         print("Replay Buffer Class Distribution: ", sorted_counter_dict)
 
