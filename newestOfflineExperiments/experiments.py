@@ -232,10 +232,12 @@ class Experiments:
             # cl_model.BRS(features, train_x, train_y)
 
             # Used only for LARS to obtain the losses of the training samples
-            # losses_LARS = []
-            # for x, y in zip(features, train_y):
-            #     _, loss = cl_model.head.evaluate(x=np.expand_dims(x, axis=0), y=np.expand_dims(y, axis=0), verbose=0)
-            #     losses_LARS.append(loss)
+            losses_LARS = []
+            for x, y in zip(features, train_y):
+                _, loss = cl_model.head.evaluate(x=np.expand_dims(x, axis=0), y=np.expand_dims(y, axis=0), verbose=0)
+                losses_LARS.append(loss)
+
+            print("Losses LARS: ", losses_LARS)
 
             # Have this issue:
             # S = Sloss * a + Sbalance
@@ -254,32 +256,35 @@ class Experiments:
             print("---------------------------------")
 
             # After each batch, compute class-wise accuracy on the test set
-            class_correct = [0]*50  # Change 50 to the number of your classes
-            class_total = [0]*50
+            # class_correct = [0]*50  # Change 50 to the number of your classes
+            # class_total = [0]*50
 
-            predictions = np.argmax(cl_model.model.predict(test_x), axis=1)
+            # predictions = np.argmax(cl_model.model.predict(test_x), axis=1)
 
-            for y, prediction in zip(test_y, predictions):
+            # for y, prediction in zip(test_y, predictions):
                 
-                y = int(y)
-                if prediction == y:
-                    class_correct[y] += 1
-                class_total[y] += 1
+            #     y = int(y)
+            #     if prediction == y:
+            #         class_correct[y] += 1
+            #     class_total[y] += 1
 
-            # Compute and store the accuracy for each class
-            for class_id in range(50):  # Change 50 to the number of your classes
-                if class_total[class_id] > 0:
-                    accuracy = class_correct[class_id] / class_total[class_id]
-                else:
-                    accuracy = 0
-                class_accuracies[class_id].append(accuracy)
-
+            # # Compute and store the accuracy for each class
+            # for class_id in range(50):  # Change 50 to the number of your classes
+            #     if class_total[class_id] > 0:
+            #         accuracy = class_correct[class_id] / class_total[class_id]
+            #     else:
+            #         accuracy = 0
+            #     class_accuracies[class_id].append(accuracy)
 
         # Store results in json file
         self.storeExperimentOutputNew(experiment_name=experiment_name,
                                    usecase_name=usecase,
                                    accuracies=accuracies,
                                    losses=losses)
+        
+        # self.storeClassAccuracies(experiment_name=experiment_name,
+        #                             usecase_name=usecase,
+        #                             class_accuracies=class_accuracies)
 
     # Function to augment data used for both the training and replay samples
     # Issue with augment is that we cannot store features on buffer if we will augument the data after because the augmentation
