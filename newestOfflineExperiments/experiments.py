@@ -232,12 +232,13 @@ class Experiments:
             # cl_model.BRS(features, train_x, train_y)
 
             # Used only for LARS to obtain the losses of the training samples
-            losses_LARS = []
-            for x, y in zip(features, train_y):
-                _, loss = cl_model.head.evaluate(x=np.expand_dims(x, axis=0), y=np.expand_dims(y, axis=0), verbose=0)
-                losses_LARS.append(loss)
+            # losses_LARS = []
+            # for x, y in zip(features, train_y):
+            #     _, loss = cl_model.head.evaluate(x=np.expand_dims(x, axis=0), y=np.expand_dims(y, axis=0), verbose=0)
+            #     losses_LARS.append(loss)
 
-            print("Losses LARS: ", losses_LARS)
+            # loss needs fixing, always gives 1.0
+            # print("Losses LARS: ", losses_LARS)
 
             # Have this issue:
             # S = Sloss * a + Sbalance
