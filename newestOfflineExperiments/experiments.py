@@ -257,8 +257,10 @@ class Experiments:
             class_correct = [0]*50  # Change 50 to the number of your classes
             class_total = [0]*50
 
-            for x, y in zip(test_x, test_y):
-                prediction = np.argmax(cl_model.model.predict(np.expand_dims(x, axis=0)))
+            predictions = np.argmax(cl_model.model.predict(test_x), axis=1)
+
+            for y, prediction in zip(test_y, predictions):
+                
                 y = int(y)
                 if prediction == y:
                     class_correct[y] += 1
