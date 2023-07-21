@@ -259,6 +259,7 @@ class Experiments:
 
             for x, y in zip(test_x, test_y):
                 prediction = np.argmax(cl_model.model.predict(np.expand_dims(x, axis=0)))
+                y = int(y)
                 if prediction == y:
                     class_correct[y] += 1
                 class_total[y] += 1
