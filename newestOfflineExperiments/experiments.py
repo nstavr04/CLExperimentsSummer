@@ -109,7 +109,7 @@ class Experiments:
         # lr_schedule = CustomLearningRateScheduler(initial_learning_rate=0.004, gamma=0.9999846859337639)
         # optimizer = tf.keras.optimizers.SGD(learning_rate=lr_schedule)
 
-        optimizer = tf.keras.optimizers.SGD(learning_rate=0.001)
+        # optimizer = tf.keras.optimizers.SGD(learning_rate=0.001)
 
         accuracies = []
         losses = []

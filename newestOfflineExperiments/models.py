@@ -239,6 +239,7 @@ class ContinualLearningModel:
         sorted_counter_dict = {k: counter_dict[k] for k in sorted(counter_dict)}
         print("Replay Buffer Class Distribution: ", sorted_counter_dict)
 
+    # Unsure how to exactly get Sbalance and Sloss as score vectors
     # Loss-Aware Balanced Reservoir Sampling
     def LARS(self, features, train_x, train_y, losses):
 
@@ -246,7 +247,7 @@ class ContinualLearningModel:
         for i in range(len(train_x)):
 
             # We also store the corresponding loss value
-            sample = (features[i], train_y[i], losses[i])
+            # sample = (features[i], train_y[i], losses[i])
 
             if self.replay_buffer > len(self.replay_representations_x):
 
@@ -259,13 +260,12 @@ class ContinualLearningModel:
 
                 # If replay buffer is full, we decide which sample to replace based on their scores
 
-                # Compute Sbalance
-                class_counts = np.bincount(self.replay_representations_y)
-                Sbalance = class_counts / len(self.replay_representations_x)
+                # Compute Sbalance - occurances of each class
+                Sbalance = np.bincount(self.replay_representations_y)
+                # Sbalance = class_counts / len(self.replay_representations_x)
 
                 # Compute Sloss
                 Sloss = -np.array(self.replay_representations_losses)
-                Sloss /= np.sum(Sloss)
 
                 # Combine Sbalance and Sloss to get the final scores
                 a = np.sum(np.abs(Sbalance)) / np.sum(np.abs(Sloss))
