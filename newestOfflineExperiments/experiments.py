@@ -62,6 +62,41 @@ class Experiments:
         with open('experiments/' + experiment_name + '.json', 'w') as outfile:
             json.dump(data, outfile)
 
+    # Used for individual class accuracy
+    def storeClassAccuracies(self, experiment_name, usecase_name, class_accuracies):
+        data = []
+
+        # Load previously recorded usecases
+        with open('experiments/' + experiment_name + '_class_accuracies.json', ) as json_file:
+            data = json.load(json_file)
+
+        # Store new usecase
+        exp = dict()
+        exp[usecase_name] = dict()
+        for class_id in range(50):  # Change 50 to the number of your classes
+            exp[usecase_name][f"class_{class_id}_acc"] = class_accuracies[class_id]
+        data.append(exp)
+
+        # Write the updated data back to the file
+        with open('experiments/' + experiment_name + '_class_accuracies.json', 'w') as outfile:
+            json.dump(data, outfile)
+
+    # Used for individual class accuracy
+    def plot_class_accuracies(experiment_name, usecase_name):
+        # Load data from the file
+        with open('experiments/' + experiment_name + '_class_accuracies.json', ) as json_file:
+            data = json.load(json_file)
+
+        # Find the usecase
+        for exp in data:
+            if usecase_name in exp:
+                # Plot the accuracy for each class
+                for class_id in range(50):  # Change 50 to the number of your classes
+                    plt.figure()
+                    plt.plot(exp[usecase_name][f"class_{class_id}_acc"])
+                    plt.title(f"Class {class_id} accuracy")
+                    plt.show()
+
     def print_trainable_status(self, model):
         for layer in model.layers:
             print(f"{layer.name}: {layer.trainable}")
@@ -106,13 +141,16 @@ class Experiments:
         #### End of debugging ####
 
         # Used for exponential learning decay
-        lr_schedule = CustomLearningRateScheduler(initial_learning_rate=0.004, gamma=0.9999846859337639)
-        optimizer = tf.keras.optimizers.SGD(learning_rate=lr_schedule)
+        # lr_schedule = CustomLearningRateScheduler(initial_learning_rate=0.004, gamma=0.9999846859337639)
+        # optimizer = tf.keras.optimizers.SGD(learning_rate=lr_schedule)
 
-        # optimizer = tf.keras.optimizers.SGD(learning_rate=0.001)
+        optimizer = tf.keras.optimizers.SGD(learning_rate=0.001)
 
         accuracies = []
         losses = []
+
+        # Create a list of lists to store accuracy for each class over time
+        class_accuracies = [[] for _ in range(50)]
 
         # Training, loop over the training incremental batches
         for i, train_batch in enumerate(dataset):
@@ -205,12 +243,34 @@ class Experiments:
             # Don't know how to combine them
             # cl_model.LARS(features, train_x, train_y, losses_LARS)
 
+            # Here, if we want to create an accuracy graph for each of the classes individually we need a way to be able
+            # to obtain individual losses for each class.
+
             # Evaluate the model on the test set
             loss, acc = cl_model.model.evaluate(test_x, test_y)
             accuracies.append(round(acc*100,1))
             losses.append(loss)
             print("> ", cl_model.name, " Accuracy: ", acc, " Loss: ", loss)
             print("---------------------------------")
+
+            # After each batch, compute class-wise accuracy on the test set
+            class_correct = [0]*50  # Change 50 to the number of your classes
+            class_total = [0]*50
+
+            for x, y in zip(test_x, test_y):
+                prediction = np.argmax(cl_model.model.predict(np.expand_dims(x, axis=0)))
+                if prediction == y:
+                    class_correct[y] += 1
+                class_total[y] += 1
+
+            # Compute and store the accuracy for each class
+            for class_id in range(50):  # Change 50 to the number of your classes
+                if class_total[class_id] > 0:
+                    accuracy = class_correct[class_id] / class_total[class_id]
+                else:
+                    accuracy = 0
+                class_accuracies[class_id].append(accuracy)
+
 
         # Store results in json file
         self.storeExperimentOutputNew(experiment_name=experiment_name,

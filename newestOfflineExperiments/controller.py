@@ -59,6 +59,8 @@ if __name__ == '__main__':
         experiments.plotExperiment(experiment_name="RBS_3000_HL_EXPERIMENTS",
                                    title="RBS_3000_HL_EXPERIMENTS (CORe50 NICv2 - 391)")
         
+        experiments.plot_class_accuracies(experiment_name="RBS_3000_HL_EXPERIMENTS", usecase_name="RBS_3000_HL5")
+        
     elif args.exp_RBS_5000:
         print("> Experiment: RBS_5000")
 

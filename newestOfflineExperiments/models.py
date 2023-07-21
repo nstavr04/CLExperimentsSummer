@@ -22,10 +22,10 @@ class ContinualLearningModel:
         self.replay_representations_losses = []
         self.replay_buffer = replay_buffer # The number of patterns stored
 
-        self.lr_schedule = CustomLearningRateScheduler(initial_learning_rate=0.004, gamma=0.9999846859337639)
-        self.optimizer = tf.keras.optimizers.SGD(learning_rate=self.lr_schedule)
+        # self.lr_schedule = CustomLearningRateScheduler(initial_learning_rate=0.004, gamma=0.9999846859337639)
+        # self.optimizer = tf.keras.optimizers.SGD(learning_rate=self.lr_schedule)
 
-        # self.optimizer = tf.keras.optimizers.SGD(learning_rate=0.001)
+        self.optimizer = tf.keras.optimizers.SGD(learning_rate=0.001)
 
     # Base of our model. We remove the last N layers of MobileNetV2    
     def buildBaseHidden(self,hidden_layers=0):
