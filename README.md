@@ -2,7 +2,7 @@
 
 This repository contains the code for the offline experiments performed in Continual Learning on Edge using TensorFlow-Lite.
 
-Old and new offline experiments are used for reference. We utilize the experiments contained in newestOfflineExperiments folder.
+We utilize the experiments contained in newestOfflineExperiments folder.
 
 The experiments are controlled from the controller.py class.
 
