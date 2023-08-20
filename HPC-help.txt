@@ -1,0 +1,119 @@
+ssh username@101ws18.in.cs.ucy.ac.cy
+
+ssh username@turing1.ucy.ac.cy
+
+After login to HPC always run this:
+
+git clone https://github.com/nstavr04/CLExperimentsSummer
+
+Go in the images and execute:
+
+nohup wget http://bias.csr.unibo.it/maltoni/download/core50/core50_128x128.zip > dwnld_log.txt &
+
+then
+
+module use /share/apps/eb/modules/all
+
+MODULES WE NEED
+Anaconda3/2020.11
+
+Do not use this tensorflow module, it causes issue. You need to a conda environment and download tensorflow there
+TensorFlow/2.1.0-fosscuda-2019b-Python-3.7.4
+
+Run these:
+module use /share/apps/eb/modules/all
+module load Anaconda3/2020.11
+
+pip install --user matplotlib
+
+Do not use module load matplotlib
+
+conda create --name myenvtf python=3.7.4
+Did conda init bash once
+
+# WORKING
+conda activate tfnew
+
+conda activate myenvtf
+
+python3 controller.py --exp_RBS_3000
+
+current matplotlib version - 3.5.3
+
+INTERACTIVE JOB:
+
+ssh -Y username@turning1.ucy.ac.cy
+
+sinfo - vlepw ta nodes gia na kserw pu tha enothw
+
+# WORKING BEST FOR GPU
+#######
+salloc --mem=40G -N1 -p GPU srun --pty /bin/bash
+
+# compute-0-0, compute-0-1, compute-0-2
+salloc --mem=40G -N1 --nodelist=compute-0-2 srun --pty /bin/bash
+
+# WORKING
+salloc --mem=40G -N1 -p TEST srun --pty /bin/bash
+
+salloc -N1 -p GPU srun --pty /bin/bash
+
+# Not working yet:
+salloc --gres=gpu:1,gpu_mem:10000 -N1 -p GPU srun --pty /bin/bash
+
+# Gia na dw specific node
+salloc -p GPU --nodelist=gpu-0-1
+
+# Vlepw ta jobs mou:
+squeue -u nstavr04
+
+# Vlepw pioi xrisimopoioun gpu:
+squeue -p GPU -l
+
+# View info on a node:
+scontrol show node=compute-0-0
+
+
+nvidia-smi # gia na dw info tis gpu mu
+
+# View info on the node you are
+hostname
+
+# Meta apo to salloc -p GPU px prp na kanw kai srun --pty /bin/bash gia na paw se ekino to node
+idalios tha minw sto login node
+
+# Vlepw ligo info gia to job mou
+scontrol show job $SLURM_JOB_ID
+
+Stop a job:
+scancel job_id
+
+ISSUES:
+Tesla V100-SXM2-32GB have cuda compute capability of 7.0.
+The tensorflow module has minimum cuda capability of 7.5 so it's an issue.
+
+Trying Solution:
+
+conda create --name tensorflow_gpu python=3.7
+conda activate tensorflow_gpu
+conda install tensorflow-gpu==2.1.0
+
+Exw also to tf environment me to latest tf version 2.12 and python 3.9
+
+I have tensorflow_gpu=2.1.0 on this environment which has cudnn and cuda versions.
+
+# Try this to only use 1 GPU
+export CUDA_VISIBLE_DEVICES=0
+
+# View conda environments
+conda env list
+
+# Delete conda env
+conda env remove --name myenv
+
+# For git after running my code:
+git commit -m "Message"
+git push
+
+# Command on MY LAPTOP to get graph:
+& D:/Programs/miniconda3/envs/tf2.12/python.exe d:/MyFiles/ADE/SummerCodeContinuation/newestOfflineExperiments/controller.py --exp_RBS_3000
